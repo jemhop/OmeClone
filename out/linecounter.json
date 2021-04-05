@@ -1,0 +1,87 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "c:\\Users\\User\\Desktop\\Omegle",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2021-04-05 23:47:06",
+            "filesum": 8,
+            "codesum": 1749,
+            "commentsum": 12,
+            "blanksum": 55,
+            "statistics": {
+                ".json": {
+                    "code": 1435,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".js": {
+                    "code": 58,
+                    "comment": 10,
+                    "blank": 22
+                },
+                ".html": {
+                    "code": 100,
+                    "comment": 0,
+                    "blank": 1
+                },
+                ".css": {
+                    "code": 156,
+                    "comment": 2,
+                    "blank": 32
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 1416,
+                    "comment": 0,
+                    "filename": "package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "package.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "public\\chat.html"
+                },
+                {
+                    "blank": 32,
+                    "code": 156,
+                    "comment": 2,
+                    "filename": "public\\css\\style.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 49,
+                    "comment": 0,
+                    "filename": "public\\index.html"
+                },
+                {
+                    "blank": 11,
+                    "code": 26,
+                    "comment": 7,
+                    "filename": "public\\js\\main.js"
+                },
+                {
+                    "blank": 9,
+                    "code": 22,
+                    "comment": 3,
+                    "filename": "server.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "utils\\messages.js"
+                }
+            ]
+        }
+    ]
+}

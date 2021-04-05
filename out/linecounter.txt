@@ -1,0 +1,28 @@
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2021-04-05 23:47:06
+count workspace : c:\Users\User\Desktop\Omegle
+total files : 8
+total code lines : 1749
+total comment lines : 12
+total blank lines : 55
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |          .json|           1435|              0|              0|     82|
+   |            .js|             58|             10|             22|    3.3|
+   |          .html|            100|              0|              1|    5.7|
+   |           .css|            156|              2|             32|    8.9|
+   -------------------------------------------------------------------------
+package-lock.json, code is 1416, comment is 0, blank is 0.
+package.json, code is 19, comment is 0, blank is 0.
+public\chat.html, code is 51, comment is 0, blank is 1.
+public\css\style.css, code is 156, comment is 2, blank is 32.
+public\index.html, code is 49, comment is 0, blank is 0.
+public\js\main.js, code is 26, comment is 7, blank is 11.
+server.js, code is 22, comment is 3, blank is 9.
+utils\messages.js, code is 10, comment is 0, blank is 2.
+===============================================================================
