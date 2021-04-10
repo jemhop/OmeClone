@@ -9,18 +9,32 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+var searchingUsers = []
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const botName = "ADMIN";
 
 io.on('connection', socket =>  {
+    socket.emit('ID', socket.id);
 
+    socket.on('tagSubmit', (user = {userID, tags}) => {
+        searchingUsers.push(user);
+        console.log(user.tags);
+        console.log(user.userID);
+
+        for(let i = 0; i <searchingUsers.length; i++)
+        {
+            console.log(`User: ${searchingUsers[i].userID}, searching for: ${searchingUsers[i].tags}`);
+        }
+        
+    });
     socket.on('joinRoom', ({username, room}) => {
         const user = userJoin(socket.id, username, room)
-
         socket.join(user.room);
         //to connecting client
         socket.emit('message', formatMessage(botName, `Welcome to OmegClone, ${username}!`));
+        
 
         //to all other clients in room
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${username} has joined the room! `));
@@ -29,7 +43,7 @@ io.on('connection', socket =>  {
             room: user.room,
             users: getRoomUsers(user.room)
         });
-    })
+    });
 
      
      
