@@ -82,6 +82,104 @@
                     "filename": "utils\\messages.js"
                 }
             ]
+        },
+        {
+            "version": "0.2.7",
+            "counttime": "2021-04-10 09:17:37",
+            "filesum": 11,
+            "codesum": 1863,
+            "commentsum": 19,
+            "blanksum": 102,
+            "statistics": {
+                ".json": {
+                    "code": 1435,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".js": {
+                    "code": 181,
+                    "comment": 17,
+                    "blank": 69
+                },
+                ".css": {
+                    "code": 156,
+                    "comment": 2,
+                    "blank": 32
+                },
+                ".html": {
+                    "code": 91,
+                    "comment": 0,
+                    "blank": 1
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 1416,
+                    "comment": 0,
+                    "filename": "package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "package.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "public\\chat.html"
+                },
+                {
+                    "blank": 32,
+                    "code": 156,
+                    "comment": 2,
+                    "filename": "public\\css\\style.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "public\\index.html"
+                },
+                {
+                    "blank": 14,
+                    "code": 39,
+                    "comment": 6,
+                    "filename": "public\\js\\chat.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "public\\js\\index.js"
+                },
+                {
+                    "blank": 14,
+                    "code": 40,
+                    "comment": 7,
+                    "filename": "public\\js\\maindeprecated.js"
+                },
+                {
+                    "blank": 21,
+                    "code": 46,
+                    "comment": 3,
+                    "filename": "server.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "utils\\messages.js"
+                },
+                {
+                    "blank": 8,
+                    "code": 29,
+                    "comment": 1,
+                    "filename": "utils\\users.js"
+                }
+            ]
         }
     ]
 }

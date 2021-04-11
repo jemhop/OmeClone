@@ -1,5 +1,4 @@
-const tagsController = document.getElementById('tagsController');
-
+const tagsController = document.getElementById('tags-controller');
 
 let ID;
 let tags = [];

@@ -26,3 +26,34 @@ public\js\main.js, code is 26, comment is 7, blank is 11.
 server.js, code is 22, comment is 3, blank is 9.
 utils\messages.js, code is 10, comment is 0, blank is 2.
 ===============================================================================
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2021-04-10 09:17:36
+count workspace : c:\Users\User\Desktop\Omegle
+total files : 11
+total code lines : 1863
+total comment lines : 19
+total blank lines : 102
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |          .json|           1435|              0|              0|     77|
+   |            .js|            181|             17|             69|    9.7|
+   |           .css|            156|              2|             32|    8.4|
+   |          .html|             91|              0|              1|    4.9|
+   -------------------------------------------------------------------------
+package-lock.json, code is 1416, comment is 0, blank is 0.
+package.json, code is 19, comment is 0, blank is 0.
+public\chat.html, code is 51, comment is 0, blank is 1.
+public\css\style.css, code is 156, comment is 2, blank is 32.
+public\index.html, code is 40, comment is 0, blank is 0.
+public\js\chat.js, code is 39, comment is 6, blank is 14.
+public\js\index.js, code is 17, comment is 0, blank is 10.
+public\js\maindeprecated.js, code is 40, comment is 7, blank is 14.
+server.js, code is 46, comment is 3, blank is 21.
+utils\messages.js, code is 10, comment is 0, blank is 2.
+utils\users.js, code is 29, comment is 1, blank is 8.
+===============================================================================
