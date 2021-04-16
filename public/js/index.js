@@ -1,4 +1,5 @@
-const tagsController = document.getElementById('tags-controller');
+const tagsController = document.getElementById('tagsController');
+const userCount = document.getElementById('userCount');
 
 let ID;
 let tags = [];
@@ -10,17 +11,29 @@ socket.on('ID', IDInput => {
     console.log("User ID is " + ID)
 })
 
+socket.on('userCountUpdate', onlineUsers=> {
+    userCount.innerText = onlineUsers == 1 ? `One user is currently online! (That's you!)` : `${onlineUsers} users are currently online!`;
+});
+
 tagsController.addEventListener('submit', e =>  {
     e.preventDefault();
 
-    var tagsUnfiltered = e.target.elements.tags.value;
-    tags[0] = tagsUnfiltered;
+    var tagsUnfiltered = String(e.target.elements.tags.value);
+    tags = parseTags(tagsUnfiltered)
 
-    console.log(tags[0]);
-    console.log("-N.B- Remember to implement filtering of tags into multiple tags for use as seperate individual matchmaking queries fuckhead -N.B-")
+    for(let i = 0; i < tags.length; i++) 
+    {
+        console.log(tags[i]);
+    }
+    console.log("You implemented parsing of tags, good job, now put it in a seperate file sometime fuckhead.")
 
-    e.target.elements.tags.value = '';
+    
 
     socket.emit('tagSubmit', {userID: ID, tags: tags[0]});
 });
+
+function parseTags(tagsUnfiltered)
+{
+    return tagsUnfiltered.split(",").map(item => item.trim());
+} 
 

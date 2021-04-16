@@ -3,12 +3,10 @@ const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const userList = document.getElementById('users');
 
-
 const username = 'Tester';
 const room = 'testRoom';
 const socket = io();
-//Join chatroom
-socket.emit('joinRoom', {username, room});
+let chatPartner;
 
 socket.on('roomUsers', ({room, users}) => {
     outputRoomName(room);

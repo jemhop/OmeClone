@@ -133,12 +133,23 @@ a {
 }
 
 .join-header {
-	text-align: left;
 	padding: 10px;
 	padding-right:20px;
 	padding-left:20px;
 	background: var(--dark-color-a);
 	color: #fff;
+}
+
+.userCount {
+	display:inline-flex;
+	width:50%;
+	text-align:right;
+}
+
+.title {
+	display:inline-flex;
+	width:50%;
+	text-align:left;
 }
 
 .join-main {
