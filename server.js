@@ -15,11 +15,15 @@ const io = socketio(server);
 let searchingUsers = []
 let onlineUsers = 0;
 
-app.use(express.static(path.join(__dirname, 'public')));
+//I know this variable should really be in my tag matching function but as of right now most of the solutions I can think of are really messy so I'm just gonna
+//leave it here until the inspiration to rewrite strikes
+let searchingUserIndex = 0;
 
+app.use(express.static(path.join(__dirname, 'public')));
 const botName = "ADMIN";
 
 io.on('connection', socket =>  {
+    console.log('Reached')
     onlineUsers++;
     io.emit('userCountUpdate', onlineUsers);
     socket.emit('ID', socket.id);
@@ -27,7 +31,7 @@ io.on('connection', socket =>  {
     socket.on('tagSubmit', (user = {userID, tags}) => {
         if(searchingUsers.length >= 2) 
         {
-            recursiveMatch();
+
         }
         searchingUsers.push(user);
 
@@ -37,15 +41,6 @@ io.on('connection', socket =>  {
         }
         
     });     
-   
-    socket.on('disconnect', () =>{
-        const user = userLeave(socket.id);
-        onlineUsers--;
-        if(user) {
-            io.to(user.room).emit('message', formatMessage(botName, `${user.username} has disconnected`)); //goes to all
-        }
-        
-    })
 
     socket.on('chatMessage', (msg) =>{
         const user = getCurrentUser(socket.id);
@@ -55,47 +50,50 @@ io.on('connection', socket =>  {
 });
 
 
-//this code is so bad, like genuinely, really, actually, genuinely so bad
-//please, please, please, future me majorly rewrite it
-//its also SO fucking slow (i believe it's O(N) for a single user and O(N^2) for the whole list of searching users? idk)
+//super crude solution, this function is just Always running and checking itself 
 function matchingManager()
 {
-    //this is badbadbadbadbadbadbadbadbadbadbadbad but i wanted to keep business logic outside of my matching function
-    let currentUserIndex = 0;
-    currentUser = searchingUsers[currentUserIndex]
-    matchResult = recursiveMatch(currentUserIndex)
-    if(matchResult.isArray())
+    if(searchingUsers.length < 2) matchingManager();
+    let matchFunction = matchUser(searchingUserIndex);
+    if(matchFunction == -1)
     {
-        return matchResult;
+        searchingUserIndex = clampedIncrement(searchingUserIndex, 0, searchingUsers.length-1);
+        //recursion
+        matchingManager();
     }
-    else if(!matchResult.isArray() && searchingUsers.length >= 2)
+    else
     {
-        recursiveMatch(currentUserIndex)
+        return matchFunction;
     }
-
 }
 
-function recursiveMatch(currentUserIndex)
+function matchUser()
 {
-    //this bit is decent
-    currentUser = searchingUsers[0].id;
-    userTags = searchingUsers[0].tags
     for(let i = 0; i < searchingUsers.length; i++)
     {
         let sharedTags = _.intersection(userTags, searchingUsers[i].tags)
         //intersection returns an array of all shared items
-        if(sharedTags.length > 0)
+        if(sharedTags.length > 0 && searchingUsers[i].id !== userID)
         {
             //remove and return if sucessful
-            searchingUsers.splice(currentUser, 1);
-            return sharedTags;
+            searchingUsers.splice(searchingUserIndex, 1);
+            searchingUsers.splice(i, 1)
+            return {searchingID: userID, foundID: searchingUsers[i].id};
         }
     }
-    //else move onto the next user in the array
-    return currentUserIndex
-
+    return -1;
 }
 
+//this function exists because im too lazy to increment and then call a clamp, i think ill replace it in the future but it works for now
+function clampedIncrement(value, min, max)
+{
+    value++;
+    if(value > max)
+        value = min;
+    else if(value < min)
+        value = max;
+    return value;
+}
 
 const PORT = process.env.PORT || 3000;
 
