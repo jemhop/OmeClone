@@ -20,11 +20,12 @@ tagsController.addEventListener('submit', e =>  {
 
     var tagsUnfiltered = String(e.target.elements.tags.value);
     tags = parseTags(tagsUnfiltered)
-    console.log("You implemented parsing of tags, good job, now put it in a seperate file sometime fuckhead.")
-
+    console.log(window.location.href)
+    
     
 
     socket.emit('tagSubmit', {userID: ID, tags: tags});
+    window.location+='chat';
 });
 
 function parseTags(tagsUnfiltered)

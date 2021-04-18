@@ -1,5 +1,6 @@
 //todo: comment your code fuckhead
 
+const {v4: uuidv4} = require('uuid')
 const express = require('express');
 const path = require('path');
 const http = require('http');
@@ -23,12 +24,19 @@ let userInArray = false;
 app.use(express.static(path.join(__dirname, 'public')));
 const botName = "ADMIN";
 
+
 app.get('/chat', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/chat.html'));
-  })
+})
+app.get('/settings', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/settings.html'));
+})
 
+//this socket.io used for getting tag matches
 io.on('connection', socket =>  {
     
+    
+    console.log(`User ${socket.id} has connected`);
     onlineUsers++;
     io.emit('userCountUpdate', onlineUsers);
     socket.emit('ID', socket.id);
@@ -64,6 +72,7 @@ io.on('connection', socket =>  {
     })
 
     socket.on('disconnect', function() {
+        console.log(`User ${socket.id} has disconnected`);
         onlineUsers--;
         io.emit('userCountUpdate', onlineUsers);
         removeUserById(userObject, searchingUsers);
