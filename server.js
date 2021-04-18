@@ -18,15 +18,14 @@ let onlineUsers = 0;
 //I know this variable should really be in my tag matching function but as of right now most of the solutions I can think of are really messy so I'm just gonna
 //leave it here until the inspiration to rewrite strikes
 let searchingUserIndex = 0;
-
 app.use(express.static(path.join(__dirname, 'public')));
 const botName = "ADMIN";
 
 io.on('connection', socket =>  {
-    console.log('Reached')
     onlineUsers++;
     io.emit('userCountUpdate', onlineUsers);
     socket.emit('ID', socket.id);
+    let userObject;
 
     socket.on('tagSubmit', (user = {userID, tags}) => {
         if(searchingUsers.length >= 2) 
@@ -34,7 +33,7 @@ io.on('connection', socket =>  {
 
         }
         searchingUsers.push(user);
-
+        userObject = user;
         for(let i = 0; i <searchingUsers.length; i++)
         {
             console.log(`User: ${searchingUsers[i].userID}, searching for: ${searchingUsers[i].tags}`);
@@ -46,6 +45,12 @@ io.on('connection', socket =>  {
         const user = getCurrentUser(socket.id);
 
         io.emit('message', formatMessage(user.username, msg));
+    })
+
+    socket.on('disconnect', function() {
+        onlineUsers--;
+        searchingUsers.slice(searchingUsers.findIndex(userObject => userObject.userID === socket.id), 1);
+        io.emit('userCountUpdate', onlineUsers);
     })
 });
 
@@ -93,6 +98,12 @@ function clampedIncrement(value, min, max)
     else if(value < min)
         value = max;
     return value;
+}
+
+//i really need to start moving these util functions into a seperate file, maybe as a node module
+function firstDigit(ntn, number){
+	var len = Math.floor(Math.log(number) / Math.LN10) - ntn;
+  return  ((number / Math.pow(10, len)) % 10) | 0;
 }
 
 const PORT = process.env.PORT || 3000;
