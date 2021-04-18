@@ -5,7 +5,7 @@ const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
-const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/users');
+const {removeUserById} = require('./utils/users');
 const _ = require('underscore');
 
 const app = express();
@@ -18,25 +18,41 @@ let onlineUsers = 0;
 //I know this variable should really be in my tag matching function but as of right now most of the solutions I can think of are really messy so I'm just gonna
 //leave it here until the inspiration to rewrite strikes
 let searchingUserIndex = 0;
+let oldUserCount;
+let userInArray = false;
 app.use(express.static(path.join(__dirname, 'public')));
 const botName = "ADMIN";
 
+app.get('/chat', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/chat.html'));
+  })
+
 io.on('connection', socket =>  {
+    
     onlineUsers++;
     io.emit('userCountUpdate', onlineUsers);
     socket.emit('ID', socket.id);
     let userObject;
 
     socket.on('tagSubmit', (user = {userID, tags}) => {
-        if(searchingUsers.length >= 2) 
+        oldSearchingCount = searchingUsers.length;
+        if(!userInArray)
         {
-
+            searchingUsers.push(user);
         }
-        searchingUsers.push(user);
+            
+        userInArray = true;
+        //this ensures that only one instance calls this, because it will only get called on a connection when there was not enough users prior.
+        if(searchingUsers.length >= 2 && oldSearchingCount < 2)
+        {
+            console.log(`Calling matching manager at ${searchingUsers.length} users`)
+            matchingManager();
+        }
         userObject = user;
         for(let i = 0; i <searchingUsers.length; i++)
         {
-            console.log(`User: ${searchingUsers[i].userID}, searching for: ${searchingUsers[i].tags}`);
+            
+            console.log(`User: ${searchingUsers[i].userID}, searching for: ${user.tags.join(', ')}`);
         }
         
     });     
@@ -49,16 +65,20 @@ io.on('connection', socket =>  {
 
     socket.on('disconnect', function() {
         onlineUsers--;
-        searchingUsers.slice(searchingUsers.findIndex(userObject => userObject.userID === socket.id), 1);
         io.emit('userCountUpdate', onlineUsers);
+        removeUserById(userObject, searchingUsers);
     })
 });
 
+function setupChat(user1, user2)
+{
+    removeUserById(user1, searchingUsers)
+    removeUserById(user2, searchingUsers)
+}
 
-//super crude solution, this function is just Always running and checking itself 
+//hey kids, wanna see a magic trick? this function has the ability to conjure a stack overflow... out of thin air!
 function matchingManager()
 {
-    if(searchingUsers.length < 2) matchingManager();
     let matchFunction = matchUser(searchingUserIndex);
     if(matchFunction == -1)
     {
@@ -68,17 +88,18 @@ function matchingManager()
     }
     else
     {
-        return matchFunction;
+        alertUsers(matchFunction.searchingID, matchFunction.foundID)
+        return;
     }
 }
 
-function matchUser()
+function matchUser(searchingUserIndex)
 {
     for(let i = 0; i < searchingUsers.length; i++)
     {
-        let sharedTags = _.intersection(userTags, searchingUsers[i].tags)
+        let sharedTags = _.intersection(searchingUsers[searchingUserIndex].tags, searchingUsers[i].tags)
         //intersection returns an array of all shared items
-        if(sharedTags.length > 0 && searchingUsers[i].id !== userID)
+        if(sharedTags.length > 0 && searchingUsers[i].id !== searchingUsers[searchingUserIndex].id)
         {
             //remove and return if sucessful
             searchingUsers.splice(searchingUserIndex, 1);
@@ -105,6 +126,7 @@ function firstDigit(ntn, number){
 	var len = Math.floor(Math.log(number) / Math.LN10) - ntn;
   return  ((number / Math.pow(10, len)) % 10) | 0;
 }
+
 
 const PORT = process.env.PORT || 3000;
 
