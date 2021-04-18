@@ -12,7 +12,7 @@ socket.on('ID', IDInput => {
 })
 
 socket.on('userCountUpdate', onlineUsers=> {
-    userCount.innerText = onlineUsers == 1 ? `One user is currently online! (That's you!)` : `${onlineUsers} users are currently online!`;
+    userCount.innerText = onlineUsers == 1 ? `1 user is currently online! (That's you!)` : `${Math.ceil(onlineUsers/100)*100} users are currently online!`;
 });
 
 tagsController.addEventListener('submit', e =>  {
