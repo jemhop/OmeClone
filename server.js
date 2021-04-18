@@ -1,6 +1,6 @@
-//todo: comment your code fuckhead
+//! THIS NEEDS A COMICAL AMOUNT OF REFACTORING, AS SOON AS THE WEBSITE WORKS PLEASE YOU FUCKING IDIOT
 
-const {v4: uuidv4} = require('uuid')
+const {parse:uuidParse, stringify:uuidStringify, v4:uuidv4} = require('uuid')
 const express = require('express');
 const path = require('path');
 const http = require('http');
@@ -15,6 +15,7 @@ const io = socketio(server);
 
 let searchingUsers = []
 let onlineUsers = 0;
+let foundUsers = []
 
 //I know this variable should really be in my tag matching function but as of right now most of the solutions I can think of are really messy so I'm just gonna
 //leave it here until the inspiration to rewrite strikes
@@ -34,12 +35,11 @@ app.get('/settings', function (req, res) {
 
 //this socket.io used for getting tag matches
 io.on('connection', socket =>  {
-    
-    
     console.log(`User ${socket.id} has connected`);
     onlineUsers++;
     io.emit('userCountUpdate', onlineUsers);
-    socket.emit('ID', socket.id);
+    socket.emit('indexID', {sID: socket.id, UUID: uuidv4()});
+
     let userObject;
 
     socket.on('tagSubmit', (user = {userID, tags}) => {
@@ -50,6 +50,7 @@ io.on('connection', socket =>  {
         }
             
         userInArray = true;
+
         //this ensures that only one instance calls this, because it will only get called on a connection when there was not enough users prior.
         if(searchingUsers.length >= 2 && oldSearchingCount < 2)
         {
@@ -63,7 +64,11 @@ io.on('connection', socket =>  {
             console.log(`User: ${searchingUsers[i].userID}, searching for: ${user.tags.join(', ')}`);
         }
         
-    });     
+    });  
+    
+    socket.on('connectToPartner', partnerUUID => {
+
+    })
 
     socket.on('chatMessage', (msg) =>{
         const user = getCurrentUser(socket.id);
@@ -81,8 +86,13 @@ io.on('connection', socket =>  {
 
 function setupChat(user1, user2)
 {
-    removeUserById(user1, searchingUsers)
-    removeUserById(user2, searchingUsers)
+    foundUsers.push({sessionUUID: user1.sessionUUID, sID: user1.sID});
+    foundUsers.push({sessionUUID: user2.sessionUUID, sID: user2.sID});
+    removeUserById(user1.sID, searchingUsers)
+    removeUserById(user2.sID, searchingUsers)
+    io.to(user1.sID).emit('chatFound', user2.sessionUUID)
+    io.to(user2.sID).emit('chatFound', user1.sessionUUID)
+    return;
 }
 
 //hey kids, wanna see a magic trick? this function has the ability to conjure a stack overflow... out of thin air!
@@ -97,9 +107,13 @@ function matchingManager()
     }
     else
     {
-        alertUsers(matchFunction.searchingID, matchFunction.foundID)
-        return;
+        setupChat(matchFunction.searchingUser, matchFunction.foundUser)
     }
+    
+    if(searchingUsers.length >= 2)
+        matchingManager();
+    else
+        return;
 }
 
 function matchUser(searchingUserIndex)
@@ -110,10 +124,12 @@ function matchUser(searchingUserIndex)
         //intersection returns an array of all shared items
         if(sharedTags.length > 0 && searchingUsers[i].id !== searchingUsers[searchingUserIndex].id)
         {
+            searchingUser =  searchingUsers[searchingUserIndex];
+            foundUser = searchingUsers[i];
             //remove and return if sucessful
             searchingUsers.splice(searchingUserIndex, 1);
             searchingUsers.splice(i, 1)
-            return {searchingID: userID, foundID: searchingUsers[i].id};
+            return {searchingUser, foundUser};
         }
     }
     return -1;

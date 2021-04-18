@@ -1,19 +1,27 @@
 const tagsController = document.getElementById('tagsController');
 const userCount = document.getElementById('userCount');
 
-let ID;
+let sID;
+let sessionUUID;
 let tags = [];
 
 const socket = io();
 
-socket.on('ID', IDInput => {
-    ID = IDInput;
-    console.log("User ID is " + ID)
+socket.on('indexID', IDS => {
+    sID = IDS.sID;
+    sessionUUID = IDS.sessionUUID
 })
+
+//store UUID in session storage
+sessionStorage.setItem('sessionUUID', sessionUUID);
 
 socket.on('userCountUpdate', onlineUsers=> {
     userCount.innerText = onlineUsers == 1 ? `1 user is currently online! (That's you!)` : `${Math.ceil(onlineUsers/100)*100} users are currently online!`;
 });
+
+socket.on('chatFound', partnerUUID => {
+    sessionStorage.setItem('partnerUUID', partnerUUID)
+})
 
 tagsController.addEventListener('submit', e =>  {
     e.preventDefault();
@@ -24,8 +32,7 @@ tagsController.addEventListener('submit', e =>  {
     
     
 
-    socket.emit('tagSubmit', {userID: ID, tags: tags});
-    window.location+='chat';
+    socket.emit('tagSubmit', {sID: sID, sessionUUID: sessionUUID, tags: tags});
 });
 
 function parseTags(tagsUnfiltered)

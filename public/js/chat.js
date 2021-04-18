@@ -6,13 +6,10 @@ const userList = document.getElementById('users');
 const username = 'Tester';
 const room = 'testRoom';
 const socket = io();
-let chatPartner;
-
-socket.on('roomUsers', ({room, users}) => {
-    outputRoomName(room);
-    outputUsers(users);
-});
-
+let chatPartner = sessionStorage.getItem('partnerUUID')
+let sessionUUID = sessionStorage.getItem('sessionUUID')
+let sID;
+let partnerSID;
 
 //Message from server
 socket.on('message', message =>{
@@ -22,6 +19,11 @@ socket.on('message', message =>{
     chatMessages.scrollTop = chatMessages.scrollHeight; 
 });
 
+socket.emit('connectToPartner', partnerUUID);
+
+socket.on('connectResponse', socketIDS =>{
+    
+})
 
 //Message submit
 chatForm.addEventListener('submit', e =>  {
@@ -37,6 +39,8 @@ chatForm.addEventListener('submit', e =>  {
     e.target.elements.msg.focus();
 });
 
+
+
 //Output message to DOM
 function outputMessage(message)
 {
@@ -44,14 +48,4 @@ function outputMessage(message)
     div.classList.add('message');
     div.innerHTML = `<p class ="meta">${message.username} <span>${message.time}</span></p><p class="text">${message.text}</p>`;
     document.querySelector('.chat-messages').appendChild(div);
-}
-
-function outputRoomName(room)
-{
-    roomName.innerText = room;
-}
-
-function outputUsers(users)
-{
-    userList.innerHTML = `${users.map(user => `<li>${user.username}</li>`).join('')}`;
 }
